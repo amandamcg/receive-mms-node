@@ -53,8 +53,12 @@ function MessagingRouter() {
 
 
   async function handleIncomingSMS(req, res) {
+
     const { body } = req;
     const { NumMedia, From: SenderNumber, MessageSid } = body;
+
+    console.log("num media: " + NumMedia);
+
     let saveOperations = [];
     const mediaItems = [];
 
@@ -71,9 +75,19 @@ function MessagingRouter() {
 
     await Promise.all(saveOperations);
 
-    const messageBody = NumMedia === 0 ?
-    'Send us an image!' :
-    `Thanks for sending us ${NumMedia} file(s)`;
+    var messageBody = ' ';
+
+    if(NumMedia > 0){
+        messageBody = 'nice pic!'
+    }
+    else{
+        messageBody = 'the space is reacting to photos - text a photo and see what happens'
+    }
+
+
+    // NumMedia === 0 ?
+    // 'the space is reacting to photos - text a photo and see what happens' :
+    // 'nice pic!';
 
     const response = new MessagingResponse();
     response.message({
@@ -97,6 +111,14 @@ function MessagingRouter() {
     res.status(200).send(getRecentImages());
     clearRecentImages();
   }
+
+  // function handleIncomingSMS(){
+  //     console.log('before');
+  //
+  //     console.log(req);
+  //     console.log('after');
+  //
+  // }
 
   /**
    * Initialize router and define routes.
